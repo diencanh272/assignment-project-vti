@@ -3,10 +3,13 @@ import { Container } from "reactstrap";
 import CreateButton from "../components/Account/CreateButton";
 import ResultForm from "../components/Account/ResultForm";
 import ModalFormCreateAccount from "../components/Account/CreateNewAccount/ModalFormCreateAccount";
+import ModalFormUpdate from "../components/Account/UpdateAccount/ModalFormUpdate";
 
 function AccountContainer(props) {
     let [listAccount, setListAccount] = useState([]);
     let [showForm, setShowForm] = useState(false);
+    let [showFormUpdate, setShowFormUpdate] = useState(false);
+    let [selectAccountEdit, setSelectAccountEdit] = useState(null);
 
     let onHandleCreateButton = () => {
         setShowForm(true);
@@ -14,6 +17,10 @@ function AccountContainer(props) {
 
     let onHandleCloseModal = () => {
         setShowForm(false);
+    };
+
+    let onHandleCloseModalUpdate = () => {
+        setShowFormUpdate(false);
     };
 
     let onHandleCreateNewAccount = (accountNew) => {
@@ -31,14 +38,20 @@ function AccountContainer(props) {
         setListAccount(JSON.parse(localStorage.getItem("listAccount")));
     };
 
-    let handleEdit = (accountEdit) => {
-        setShowForm(true);
-        const editAccount = listAccount.filter(
-            (account) => account.id === accountEdit
+    let handleEdit = (account) => {
+        setSelectAccountEdit(account);
+        setShowFormUpdate(true);
+        // console.log(account);
+    };
+
+    const handleUpdate = (updatedAccount) => {
+        // Cập nhật tài khoản trong danh sách và lưu vào localStorage
+        const updatedAccounts = listAccount.map((account) =>
+            account.id === updatedAccount.id ? updatedAccount : account
         );
-        return editAccount;
-        // console.log(editAccount);
-        // console.log(listAccount);
+        setListAccount(updatedAccounts);
+        localStorage.setItem("listAccount", JSON.stringify(updatedAccounts));
+        setShowFormUpdate(false);
     };
 
     useEffect(() => {
@@ -61,7 +74,14 @@ function AccountContainer(props) {
                 showForm={showForm}
                 closeModal={onHandleCloseModal}
                 onHandleCreateNewAccount={onHandleCreateNewAccount}
+            />
+
+            <ModalFormUpdate
+                showFormUpdate={showFormUpdate}
+                closeModalUpdate={onHandleCloseModalUpdate}
+                account={selectAccountEdit}
                 handleEdit={handleEdit}
+                handleUpdate={handleUpdate}
             />
 
             {/* Form kết quả */}

@@ -3,7 +3,7 @@ export function generateId() {
     if (localStorage && localStorage.getItem("listAccount")) {
         let listAccount = JSON.parse(localStorage.getItem("listAccount"));
 
-        listAccount.forEach((account) => {
+        listAccount.forEach((account, index) => {
             if (account.id > idStart) {
                 idStart = account.id;
             }

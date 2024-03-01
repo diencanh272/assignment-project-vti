@@ -4,8 +4,8 @@ import { Button } from "reactstrap";
 function ResultFormItem(props) {
     let { listAccount, handleDelete, handleEdit } = props;
 
-    const handleButtonDelete = (accountId) => {
-        const updateAccount = listAccount.filter(
+    let handleButtonDelete = (accountId) => {
+        let updateAccount = listAccount.filter(
             (account) => account.id !== accountId
         );
         localStorage.setItem("listAccount", JSON.stringify(updateAccount));
@@ -13,11 +13,20 @@ function ResultFormItem(props) {
         handleDelete();
     };
 
+    let handleButtonEdit = (accountEdit) => {
+        let getAccountEdit = listAccount.filter(
+            (acc) => acc.id === accountEdit
+        );
+
+        handleEdit(getAccountEdit);
+        // console.log(getAccountEdit);
+    };
+
     if (listAccount) {
         let items = listAccount.map((account, index) => {
             return (
                 <tr key={index}>
-                    <td>{account.id}</td>
+                    <td>{index + 1}</td>
                     <td>{account.email}</td>
                     <td>{account.username}</td>
                     <td>{account.fullname}</td>
@@ -27,7 +36,7 @@ function ResultFormItem(props) {
                     <td>
                         <Button
                             color='warning'
-                            onClick={() => handleEdit(account.id)}
+                            onClick={() => handleButtonEdit(account.id)}
                         >
                             Edit
                         </Button>
